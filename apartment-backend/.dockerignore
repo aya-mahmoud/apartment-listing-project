@@ -1,0 +1,7 @@
+node_modules
+.next
+.env
+dist
+coverage
+Dockerfile
+docker-compose.yml
