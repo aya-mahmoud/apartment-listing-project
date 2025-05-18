@@ -17,35 +17,35 @@ export class Apartment extends Model<ApartmentCreationAttributes> {
   declare id: string;
 
   @Column({ allowNull: false })
-  title: string;
+  declare title: string;
 
   @Column({ allowNull: false })
-  location: string;
+  declare location: string;
 
   @Column({ allowNull: false })
-  compound: string;
+  declare compound: string;
 
   @Column({ allowNull: false })
-  type: string;
+  declare type: string;
 
   @Column({ allowNull: false, type: DataType.INTEGER })
-  bedrooms: number;
+  declare bedrooms: number;
 
   @Column({ allowNull: false, type: DataType.INTEGER })
-  bathrooms: number;
+  declare bathrooms: number;
 
   @Column({ allowNull: false, type: DataType.FLOAT })
-  area: number;
+  declare area: number;
 
   @Column({ allowNull: false, type: DataType.FLOAT })
-  price: number;
+  declare price: number;
 
   @Column({ type: DataType.TEXT })
-  description?: string;
+  declare description?: string;
 
   @Column({ allowNull: true })
-  image: string;
+  declare image: string;
 
   @Column({ type: DataType.JSONB, defaultValue: [] })
-  amenities: string[];
+  declare amenities: string[];
 }

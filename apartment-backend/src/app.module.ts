@@ -1,8 +1,6 @@
 import { Module } from '@nestjs/common';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { ConfigModule } from '@nestjs/config';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { ApartmentModule } from './apartment/apartment.module';
 import { Apartment } from './database/entities/apartment.entity';
 
@@ -18,14 +16,14 @@ import { Apartment } from './database/entities/apartment.entity';
       database: process.env.DB_NAME,
       models: [Apartment],
       autoLoadModels: true,
-      synchronize: false, // use false in production
+      synchronize: false,
       define: {
         underscored: true,
       },
     }),
     ApartmentModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}

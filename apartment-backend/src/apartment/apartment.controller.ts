@@ -3,22 +3,32 @@ import {
   Body,
   Controller,
   Get,
+  NotFoundException,
   Param,
   Post,
 } from '@nestjs/common';
 import { ApartmentService } from './apartment.service';
 import { CreateApartmentDto } from './dto/create-apartment.dto';
-import { Apartment } from '../database/entities/apartment.entity';
+import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApartmentResponseDto } from './dto/response-apartment.dto';
+import { toResponseDto } from './mapper/apartment.mapper';
 
+@ApiTags('Apartments')
 @Controller('apartment')
 export class ApartmentController {
   constructor(private readonly apartmentService: ApartmentService) {}
 
   @Post()
-  async create(@Body() dto: CreateApartmentDto): Promise<Apartment> {
+  @ApiOperation({ summary: 'Create a new apartment listing' })
+  @ApiResponse({
+    status: 201,
+    description: 'Apartment created',
+    type: ApartmentResponseDto,
+  })
+  async create(@Body() dto: CreateApartmentDto): Promise<ApartmentResponseDto> {
     try {
-      console.log("here")
-      return await this.apartmentService.createApartment(dto);
+      const apartment = await this.apartmentService.createApartment(dto);
+      return toResponseDto(apartment);
     } catch (error) {
       throw new BadRequestException(
         'Failed to create apartment',
@@ -28,12 +38,30 @@ export class ApartmentController {
   }
 
   @Get()
-  findAll() {
-    return this.apartmentService.findAll();
+  @ApiOperation({ summary: 'Get all apartments' })
+  @ApiResponse({
+    status: 200,
+    description: 'List of apartments',
+    type: [ApartmentResponseDto],
+  })
+  async findAll(): Promise<ApartmentResponseDto[]> {
+    const apartments = await this.apartmentService.findAll();
+    return apartments.map(toResponseDto);
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string) {
-    return await this.apartmentService.findOne(id);
+  @ApiOperation({ summary: 'Get one apartment by id' })
+  @ApiResponse({
+    status: 200,
+    description: 'The apartment',
+    type: ApartmentResponseDto,
+  })
+  @ApiResponse({ status: 404, description: 'Apartment not found' })
+  async findOne(@Param('id') id: string): Promise<ApartmentResponseDto> {
+    const apartment = await this.apartmentService.findOne(id);
+    if (!apartment) {
+      throw new NotFoundException(`Apartment with id ${id} not found`);
+    }
+    return toResponseDto(apartment);
   }
 }
